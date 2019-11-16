@@ -4,6 +4,12 @@ import React, { Component } from 'react'
 import Products from './components/Products'
 import Filter from './components/Filter';
 import Basket from './components/Basket';
+import {Provider} from 'react-redux';
+import {createStore} from 'redux';
+import store from './store'
+
+// const store = createStore(()=>{}, {});
+
 export default class App extends Component {
 
   state = {
@@ -89,6 +95,8 @@ export default class App extends Component {
   }
   render() {
     return (
+      <Provider store={store}>
+
       <div className="container">
       <h1>Ecommerce Shopping Cart App</h1>
       <hr />
@@ -114,6 +122,8 @@ export default class App extends Component {
         </div>
       </div>
     </div>
+    </Provider>
+
     )
   }
 }
