@@ -3,13 +3,15 @@
 import React, { Component } from 'react'
 import Products from './components/Products'
 import Filter from './components/Filter';
+import Basket from './components/Basket';
 export default class App extends Component {
 
   state = {
     products: [],
     filteredProducts: [],
     sort: '',
-    size: ''
+    size: '',
+    cartItems: []
   }
 
   componentDidMount(){
@@ -33,6 +35,32 @@ export default class App extends Component {
       size: e.target.value
     })
     this.listProducts()
+  }
+
+  handleAddToCart = (e, product) => {
+    this.setState(state => {
+      const cartItems = state.cartItems
+      let productsAlreadyInCart = false
+      cartItems.forEach( item => {
+        if(item.id === product.id){
+          productsAlreadyInCart = true
+          item.count++
+        }
+      })
+      if(!productsAlreadyInCart){
+        cartItems.push({...product, count: 1})
+      }
+      localStorage.setItem("cartItems", JSON.stringify(cartItems))
+      return cartItems
+    })
+  }
+
+  handleRemoveItemFromCart  = (e, product) => {
+    this.setState(state => {
+      const cartItems = state.cartItems.filter( elm => elm.id !== product.id)
+      localStorage.setItem("cartItems", JSON.stringify(cartItems))
+      return { cartItems: cartItems}
+    })
   }
 
   listProducts = () => {
@@ -76,6 +104,12 @@ export default class App extends Component {
           <Products 
             products={this.state.filteredProducts} 
             handleAddToCart={this.handleAddToCart} 
+            />
+        </div>
+        <div className="col-md-4">
+          <Basket 
+            cartItems={this.state.cartItems}
+            handleRemoveItemFromCart={this.handleRemoveItemFromCart}
             />
         </div>
       </div>
