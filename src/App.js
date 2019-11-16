@@ -8,7 +8,8 @@ export default class App extends Component {
   state = {
     products: [],
     filteredProducts: [],
-    sort: ''
+    sort: '',
+    size: ''
   }
 
   componentDidMount(){
@@ -27,6 +28,13 @@ export default class App extends Component {
     this.listProducts()
   }
 
+  handleChangeSize = (e) => {
+    this.setState({
+      size: e.target.value
+    })
+    this.listProducts()
+  }
+
   listProducts = () => {
     this.setState( state => {
       if(state.sort !== ''){
@@ -37,7 +45,19 @@ export default class App extends Component {
       } else {
         state.products.sort((a,b) => (a.id < b.di ?1: -1))
       }
+
+      if(this.state.size !== ''){
+        return {
+          filteredProducts: this.state.products.filter( a => 
+            a.availableSizes.indexOf(this.state.size.toUpperCase()) >= 0
+          )
+        }
+    
+      }
+      return { filteredProducts: this.state.products}
     }) 
+
+    
   }
   render() {
     return (
